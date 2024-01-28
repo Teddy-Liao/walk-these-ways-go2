@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/sport_client_example.dir/example/client/sport_client_example.cpp.o  -o sport_client_example  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

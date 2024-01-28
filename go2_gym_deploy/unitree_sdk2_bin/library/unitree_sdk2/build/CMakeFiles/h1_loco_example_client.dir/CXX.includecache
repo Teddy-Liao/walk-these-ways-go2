@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/example/humanoid/high_level/h1_loco_example_client.cpp
+chrono
+-
+iostream
+-
+thread
+-
+vector
+-
+unitree/robot/h1/loco/h1_loco_client.hpp
+-
+

@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/state_machine_example.dir/example/state_machine/main.cpp.o  -o state_machine_example  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

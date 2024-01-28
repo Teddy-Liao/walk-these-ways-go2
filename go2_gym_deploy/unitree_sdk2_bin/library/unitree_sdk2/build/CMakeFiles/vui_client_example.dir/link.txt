@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/vui_client_example.dir/example/client/vui_client_example.cpp.o  -o vui_client_example  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

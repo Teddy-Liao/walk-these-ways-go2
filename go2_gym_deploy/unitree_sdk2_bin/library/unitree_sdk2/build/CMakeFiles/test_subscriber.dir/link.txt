@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/test_subscriber.dir/example/helloworld/subscriber.cpp.o CMakeFiles/test_subscriber.dir/example/helloworld/HelloWorldData.cpp.o  -o test_subscriber  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

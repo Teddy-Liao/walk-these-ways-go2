@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/test_publisher.dir/example/helloworld/publisher.cpp.o CMakeFiles/test_publisher.dir/example/helloworld/HelloWorldData.cpp.o  -o test_publisher  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

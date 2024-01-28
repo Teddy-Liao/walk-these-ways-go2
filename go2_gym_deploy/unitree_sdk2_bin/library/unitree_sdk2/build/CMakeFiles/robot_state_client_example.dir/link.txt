@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/robot_state_client_example.dir/example/client/robot_state_client_example.cpp.o  -o robot_state_client_example  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

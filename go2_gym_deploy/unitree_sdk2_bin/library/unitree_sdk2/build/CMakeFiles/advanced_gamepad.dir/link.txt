@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/advanced_gamepad.dir/example/advanced_gamepad/main.cpp.o  -o advanced_gamepad  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/h1_arm_sdk_dds_example.dir/example/humanoid/high_level/h1_arm_sdk_dds_example.cpp.o  -o h1_arm_sdk_dds_example  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

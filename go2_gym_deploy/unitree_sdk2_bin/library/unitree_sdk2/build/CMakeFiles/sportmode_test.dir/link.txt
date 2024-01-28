@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/sportmode_test.dir/example/high_level/sportmode_test.cpp.o  -o sportmode_test  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

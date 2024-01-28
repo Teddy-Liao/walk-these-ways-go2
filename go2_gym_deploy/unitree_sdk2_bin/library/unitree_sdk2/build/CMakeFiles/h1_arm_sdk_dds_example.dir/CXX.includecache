@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/example/humanoid/high_level/h1_arm_sdk_dds_example.cpp
+array
+-
+chrono
+-
+iostream
+-
+thread
+-
+unitree/idl/go2/LowCmd_.hpp
+-
+unitree/robot/channel/channel_publisher.hpp
+-
+

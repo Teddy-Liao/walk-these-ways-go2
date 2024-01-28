@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/h1_low_level_example.dir/example/humanoid/low_level/humanoid.cpp.o  -o h1_low_level_example  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

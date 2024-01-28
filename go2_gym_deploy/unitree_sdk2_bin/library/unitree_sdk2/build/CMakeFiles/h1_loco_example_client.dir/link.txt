@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/h1_loco_example_client.dir/example/humanoid/high_level/h1_loco_example_client.cpp.o  -o h1_loco_example_client  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

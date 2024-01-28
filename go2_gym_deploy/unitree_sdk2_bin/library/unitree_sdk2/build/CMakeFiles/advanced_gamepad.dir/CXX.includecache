@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/example/advanced_gamepad/advanced_gamepad.hpp
+stdint.h
+-
+cmath
+-
+unitree/idl/go2/WirelessController_.hpp
+/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/example/advanced_gamepad/unitree/idl/go2/WirelessController_.hpp
+
+/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/example/advanced_gamepad/main.cpp
+mutex
+-
+unitree/idl/go2/WirelessController_.hpp
+/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/example/advanced_gamepad/unitree/idl/go2/WirelessController_.hpp
+unitree/common/thread/thread.hpp
+/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/example/advanced_gamepad/unitree/common/thread/thread.hpp
+unitree/robot/channel/channel_subscriber.hpp
+/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/example/advanced_gamepad/unitree/robot/channel/channel_subscriber.hpp
+advanced_gamepad.hpp
+/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/example/advanced_gamepad/advanced_gamepad.hpp
+

@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/wireless.dir/example/wireless/wireless.cpp.o  -o wireless  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 

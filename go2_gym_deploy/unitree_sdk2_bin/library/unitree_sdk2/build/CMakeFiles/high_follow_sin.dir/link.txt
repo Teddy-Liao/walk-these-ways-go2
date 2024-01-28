@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/high_follow_sin.dir/example/high_level/follow_sin.cpp.o  -o high_follow_sin  -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread 
