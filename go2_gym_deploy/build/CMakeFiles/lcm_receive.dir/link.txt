@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/lcm_receive.dir/unitree_sdk2_bin/lcm_receive.cpp.o  -o lcm_receive  -Wl,-rpath,/usr/local/lib -lunitree_sdk2 -lddsc -lddscxx -lrt -lpthread /usr/local/lib/liblcm.so.1.5.0 
