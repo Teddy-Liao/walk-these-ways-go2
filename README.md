@@ -138,6 +138,9 @@ According to the hints shown in terminal, Press [R2] to start the controller. Yo
 
 Test Video on Unitree Go2: https://www.bilibili.com/video/BV1tQ4y1c7ZG/?spm_id_from=333.999.0.0&vd_source=07873ebe2a113dac57775e264a210929
 
+
+**Please star this repository if it does help you! Thanks!**
+
 ## Acknowledgements
 * Many thanks to [XiaoxiaoMeitou](https://github.com/Chicken-wings-programing), who provide Nvidia 3060ti and supporting.
 * Many thanks to Jony for his support and encourage me to learn basic kownledge about RL.
