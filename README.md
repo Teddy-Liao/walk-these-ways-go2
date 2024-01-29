@@ -13,10 +13,12 @@ However, the brand-new architecture [unitree-sdk2 ](https://github.com/unitreero
 
 ---
 ## Train
-Clone this repository:
+Clone this repository and install:
 
 ``` bash
 git clone https://github.com/Teddy-Liao/walk-these-ways-go2.git
+cd walk-these-ways-go2
+pip install -e .
 ```
 
 Start training: 
