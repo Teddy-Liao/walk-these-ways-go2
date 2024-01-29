@@ -18,8 +18,8 @@ def load_and_run_policy(label, experiment_name, max_vel=1.0, max_yaw_vel=1.0):
     logdir = sorted(dirs)[0]
 
 # with open(logdir+"/parameters.pkl", 'rb') as file:
-    with open(logdir+"/parameters_cpu.pkl", 'rb') as file:
-        pkl_cfg = pkl.load(file).to('cpu')
+    with open(logdir+"/parameters.pkl", 'rb') as file:
+        pkl_cfg = pkl.load(file)
         print(pkl_cfg.keys())
         cfg = pkl_cfg["Cfg"]
         print(cfg.keys())
