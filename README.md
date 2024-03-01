@@ -144,8 +144,8 @@ Test Video on Unitree Go2: https://www.bilibili.com/video/BV1tQ4y1c7ZG/?spm_id_f
 **Please star this repository if it does help you! Thanks!**
 
 ## Acknowledgements
-* Many thanks to [XiaoxiaoMeitou](https://github.com/Chicken-wings-programing), who provide Nvidia 3060ti and supporting.
-* Many thanks to Jony for his support and encourage me to learn basic kownledge about RL.
+* Many thanks to [Leolar](https://github.com/NihaoyaLeolar), who provide Nvidia 3060ti and supporting.
+* Many thanks to [Jony](https://github.com/jonyzhang2023) for his support and encourage me to learn basic kownledge about RL.
 * Many thanks to [Simonforyou](https://github.com/Simonforyou), who provide Go2 pretrained model.
 
 ## TO DO

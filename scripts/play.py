@@ -70,7 +70,9 @@ def load_env(label, headless=False):
 
     Cfg.domain_rand.lag_timesteps = 6
     Cfg.domain_rand.randomize_lag_timesteps = True
-    Cfg.control.control_type = "actuator_net"
+    Cfg.control.control_type = "actuator_net" #"actuator_net"
+    Cfg.asset.flip_visual_attachments = True
+
 
     from go1_gym.envs.wrappers.history_wrapper import HistoryWrapper
 
@@ -94,20 +96,24 @@ def play_go1(headless=True):
     import glob
     import os
 
-    label = "gait-conditioned-agility/pretrain-v0/train"
+    # label = "gait-conditioned-agility/pretrain-v0/train"
+    label = "gait-conditioned-agility/pretrain-go2/train"
+
 
     env, policy = load_env(label, headless=headless)
 
-    num_eval_steps = 250
+    num_eval_steps = 250 #250
     gaits = {"pronking": [0, 0, 0],
              "trotting": [0.5, 0, 0],
              "bounding": [0, 0.5, 0],
              "pacing": [0, 0, 0.5]}
 
+    # x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 1.5, 0.0, 0.0
     x_vel_cmd, y_vel_cmd, yaw_vel_cmd = 1.5, 0.0, 0.0
     body_height_cmd = 0.0
-    step_frequency_cmd = 3.0
-    gait = torch.tensor(gaits["trotting"])
+    step_frequency_cmd = 3.0 #3.0
+    # gait = torch.tensor(gaits["trotting"])
+    gait = torch.tensor(gaits["pronking"])
     footswing_height_cmd = 0.08
     pitch_cmd = 0.0
     roll_cmd = 0.0
@@ -116,6 +122,8 @@ def play_go1(headless=True):
     measured_x_vels = np.zeros(num_eval_steps)
     target_x_vels = np.ones(num_eval_steps) * x_vel_cmd
     joint_positions = np.zeros((num_eval_steps, 12))
+    ###### -----------ldt---------------
+    joint_torques = np.zeros((num_eval_steps, 12))
 
     obs = env.reset()
 
@@ -137,10 +145,12 @@ def play_go1(headless=True):
 
         measured_x_vels[i] = env.base_lin_vel[0, 0]
         joint_positions[i] = env.dof_pos[0, :].cpu()
+        ###### -----------ldt---------------
+        joint_torques[i] = env.torques.detach().cpu().numpy()
 
     # plot target and measured forward velocity
     from matplotlib import pyplot as plt
-    fig, axs = plt.subplots(2, 1, figsize=(12, 5))
+    fig, axs = plt.subplots(3, 1, figsize=(12, 5))
     axs[0].plot(np.linspace(0, num_eval_steps * env.dt, num_eval_steps), measured_x_vels, color='black', linestyle="-", label="Measured")
     axs[0].plot(np.linspace(0, num_eval_steps * env.dt, num_eval_steps), target_x_vels, color='black', linestyle="--", label="Desired")
     axs[0].legend()
@@ -152,6 +162,11 @@ def play_go1(headless=True):
     axs[1].set_title("Joint Positions")
     axs[1].set_xlabel("Time (s)")
     axs[1].set_ylabel("Joint Position (rad)")
+
+    axs[2].plot(np.linspace(0, num_eval_steps * env.dt, num_eval_steps), joint_torques, linestyle="-", label="Measured")
+    axs[2].set_title("Joint Torques")
+    axs[2].set_xlabel("Time (s)")
+    axs[2].set_ylabel("Joint Torques (Nm)")
 
     plt.tight_layout()
     plt.show()
