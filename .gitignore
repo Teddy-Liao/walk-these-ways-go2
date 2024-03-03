@@ -1,0 +1,15 @@
+# 忽略VScode配置文件
+/.vscode
+
+# 忽略临时文件
+# 这意味着任何文件名以 temp 开头的文件都不会被添加到Git的版本控制中，从而避免了将这些临时文件提交到代码仓库中。
+# temp*
+
+# 忽略所有 .pyc 文件
+*.pyc
+
+# 忽略所有 .DS_Store 文件（macOS系统生成的文件）
+.DS_Store
+
+# 忽略不可参考的训练数据
+/runs/gait-conditioned-agility/2024*/
