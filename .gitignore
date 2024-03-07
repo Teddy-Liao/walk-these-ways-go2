@@ -15,4 +15,5 @@ __pycache__/
 
 # 忽略不可参考的训练数据
 /runs/gait-conditioned-agility/2024*/
+/runs/gait-conditioned-agility/pretrain-go2/
 
