@@ -9,8 +9,8 @@ import pickle as pkl
 
 from go2_gym.envs import *
 from go2_gym.envs.base.legged_robot_config import Cfg
-from go2_gym.envs.go1.go1_config import config_go1
-from go2_gym.envs.go1.velocity_tracking import VelocityTrackingEasyEnv
+from go2_gym.envs.go2.go2_config import config_go2
+from go2_gym.envs.go2.velocity_tracking import VelocityTrackingEasyEnv
 
 from tqdm import tqdm
 
@@ -88,7 +88,7 @@ def load_env(label, headless=False):
     return env, policy
 
 
-def play_go1(headless=True):
+def play_go2(headless=True):
     from ml_logger import logger
 
     from pathlib import Path
@@ -174,4 +174,4 @@ def play_go1(headless=True):
 
 if __name__ == '__main__':
     # to see the environment rendering, set headless=False
-    play_go1(headless=False)
+    play_go2(headless=False)

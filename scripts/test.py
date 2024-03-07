@@ -7,13 +7,13 @@ from tqdm import trange
 
 from go2_gym.envs import *
 from go2_gym.envs.base.legged_robot_config import Cfg
-from go2_gym.envs.go1.go1_config import config_go1
-from go2_gym.envs.go1.velocity_tracking import VelocityTrackingEasyEnv
+from go2_gym.envs.go2.go2_config import config_go2
+from go2_gym.envs.go2.velocity_tracking import VelocityTrackingEasyEnv
 
 
 def run_env(render=False, headless=False):
     # prepare environment
-    config_go1(Cfg)
+    config_go2(Cfg)
 
     Cfg.commands.num_lin_vel_bins = 30
     Cfg.commands.num_ang_vel_bins = 30

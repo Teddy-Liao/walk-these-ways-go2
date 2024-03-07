@@ -1,12 +1,12 @@
-def train_go1(headless=True):
+def train_go2(headless=True):
 
     import isaacgym
     assert isaacgym
     import torch
 
     from go2_gym.envs.base.legged_robot_config import Cfg
-    from go2_gym.envs.go1.go1_config import config_go1
-    from go2_gym.envs.go1.velocity_tracking import VelocityTrackingEasyEnv
+    from go2_gym.envs.go2.go2_config import config_go2
+    from go2_gym.envs.go2.velocity_tracking import VelocityTrackingEasyEnv
 
     from ml_logger import logger
 
@@ -16,7 +16,7 @@ def train_go1(headless=True):
     from go2_gym_learn.ppo_cse.ppo import PPO_Args
     from go2_gym_learn.ppo_cse import RunnerArgs
 
-    config_go1(Cfg)
+    config_go2(Cfg)
 
     Cfg.commands.num_lin_vel_bins = 30
     Cfg.commands.num_ang_vel_bins = 30
@@ -254,4 +254,4 @@ if __name__ == '__main__':
                 """, filename=".charts.yml", dedent=True)
 
     # to see the environment rendering, set headless=False
-    train_go1(headless=False)
+    train_go2(headless=False)

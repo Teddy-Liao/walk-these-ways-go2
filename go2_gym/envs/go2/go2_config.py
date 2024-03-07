@@ -5,7 +5,7 @@ from params_proto import Meta
 from go2_gym.envs.base.legged_robot_config import Cfg
 
 
-def config_go1(Cnfg: Union[Cfg, Meta]):
+def config_go2(Cnfg: Union[Cfg, Meta]):
     _ = Cnfg.init_state
 
     _.pos = [0.0, 0.0, 0.34]  # x,y,z [m]
