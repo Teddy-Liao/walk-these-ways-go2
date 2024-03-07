@@ -1,4 +1,0 @@
-/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/build/CMakeFiles/rebuild_cache.dir
-/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/build/CMakeFiles/edit_cache.dir
-/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/build/CMakeFiles/lcm_receive.dir
-/home/parallels/Projects/walk-these-ways-go2/go2_gym_deploy/build/CMakeFiles/lcm_position_go2.dir

@@ -72,7 +72,7 @@ def config_go2(Cnfg: Union[Cfg, Meta]):
     _ = Cnfg.env
     _.num_observations = 42
     _.observe_vel = False
-    _.num_envs = 40
+    _.num_envs = 4096
 
     _ = Cnfg.commands
     _.lin_vel_x = [-1.0, 1.0]

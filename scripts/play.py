@@ -60,7 +60,7 @@ def load_env(label, headless=False):
     Cfg.domain_rand.randomize_com_displacement = False
 
     Cfg.env.num_recording_envs = 1
-    Cfg.env.num_envs = 1
+    Cfg.env.num_envs = 5
     Cfg.terrain.num_rows = 5
     Cfg.terrain.num_cols = 5
     Cfg.terrain.border_size = 0
@@ -70,7 +70,8 @@ def load_env(label, headless=False):
 
     Cfg.domain_rand.lag_timesteps = 6
     Cfg.domain_rand.randomize_lag_timesteps = True
-    Cfg.control.control_type = "actuator_net" #"actuator_net"
+    # default control_typw is "actuator_net", you can also switch it to "P" to enable joint PD control
+    Cfg.control.control_type = "actuator_net" 
     Cfg.asset.flip_visual_attachments = True
 
 
@@ -102,7 +103,7 @@ def play_go2(headless=True):
 
     env, policy = load_env(label, headless=headless)
 
-    num_eval_steps = 250 #250
+    num_eval_steps = 2500 #250
     gaits = {"pronking": [0, 0, 0],
              "trotting": [0.5, 0, 0],
              "bounding": [0, 0.5, 0],
@@ -146,7 +147,7 @@ def play_go2(headless=True):
         measured_x_vels[i] = env.base_lin_vel[0, 0]
         joint_positions[i] = env.dof_pos[0, :].cpu()
         ###### -----------ldt---------------
-        joint_torques[i] = env.torques.detach().cpu().numpy()
+        # joint_torques[i] = env.torques.detach().cpu().numpy()
 
     # plot target and measured forward velocity
     from matplotlib import pyplot as plt
