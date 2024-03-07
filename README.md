@@ -32,7 +32,7 @@ Play the model:
 ```bash
 python scripts/play.py
 ```
-![Alt text](assets/go2_training.jpg)
+![Alt text](media/go2_training.jpg)
 
 Go2 pretrained model is provided in [./runs](runs/gait-conditioned-agility/pretrain-go2), you can choose whether to use provide pretrained model by modifying the label line `label = "gait-conditioned-agility/pretrain-go2/train"` to your own trained model.
 
