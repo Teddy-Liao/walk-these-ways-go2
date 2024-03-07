@@ -4,17 +4,17 @@ def train_go1(headless=True):
     assert isaacgym
     import torch
 
-    from go1_gym.envs.base.legged_robot_config import Cfg
-    from go1_gym.envs.go1.go1_config import config_go1
-    from go1_gym.envs.go1.velocity_tracking import VelocityTrackingEasyEnv
+    from go2_gym.envs.base.legged_robot_config import Cfg
+    from go2_gym.envs.go1.go1_config import config_go1
+    from go2_gym.envs.go1.velocity_tracking import VelocityTrackingEasyEnv
 
     from ml_logger import logger
 
-    from go1_gym_learn.ppo_cse import Runner
-    from go1_gym.envs.wrappers.history_wrapper import HistoryWrapper
-    from go1_gym_learn.ppo_cse.actor_critic import AC_Args
-    from go1_gym_learn.ppo_cse.ppo import PPO_Args
-    from go1_gym_learn.ppo_cse import RunnerArgs
+    from go2_gym_learn.ppo_cse import Runner
+    from go2_gym.envs.wrappers.history_wrapper import HistoryWrapper
+    from go2_gym_learn.ppo_cse.actor_critic import AC_Args
+    from go2_gym_learn.ppo_cse.ppo import PPO_Args
+    from go2_gym_learn.ppo_cse import RunnerArgs
 
     config_go1(Cfg)
 
@@ -220,7 +220,7 @@ def train_go1(headless=True):
 if __name__ == '__main__':
     from pathlib import Path
     from ml_logger import logger
-    from go1_gym import MINI_GYM_ROOT_DIR
+    from go2_gym import MINI_GYM_ROOT_DIR
 
     stem = Path(__file__).stem
     logger.configure(logger.utcnow(f'gait-conditioned-agility/%Y-%m-%d/{stem}/%H%M%S.%f'),

@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 import torch
 from tqdm import trange
 
-from go1_gym.envs import *
-from go1_gym.envs.base.legged_robot_config import Cfg
-from go1_gym.envs.go1.go1_config import config_go1
-from go1_gym.envs.go1.velocity_tracking import VelocityTrackingEasyEnv
+from go2_gym.envs import *
+from go2_gym.envs.base.legged_robot_config import Cfg
+from go2_gym.envs.go1.go1_config import config_go1
+from go2_gym.envs.go1.velocity_tracking import VelocityTrackingEasyEnv
 
 
 def run_env(render=False, headless=False):
