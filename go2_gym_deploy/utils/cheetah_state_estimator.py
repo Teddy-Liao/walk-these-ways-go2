@@ -8,7 +8,7 @@ import numpy as np
 from go2_gym_deploy.lcm_types.leg_control_data_lcmt import leg_control_data_lcmt
 from go2_gym_deploy.lcm_types.rc_command_lcmt import rc_command_lcmt
 from go2_gym_deploy.lcm_types.state_estimator_lcmt import state_estimator_lcmt
-# 不调用相机？
+# 不调用相机 !!!
 # from go1_gym_deploy.lcm_types.camera_message_lcmt import camera_message_lcmt
 # from go1_gym_deploy.lcm_types.camera_message_rect_wide import camera_message_rect_wide
 

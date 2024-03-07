@@ -7,10 +7,10 @@ import numpy as np
 import glob
 import pickle as pkl
 
-from go1_gym.envs import *
-from go1_gym.envs.base.legged_robot_config import Cfg
-from go1_gym.envs.go1.go1_config import config_go1
-from go1_gym.envs.go1.velocity_tracking import VelocityTrackingEasyEnv
+from go2_gym.envs import *
+from go2_gym.envs.base.legged_robot_config import Cfg
+from go2_gym.envs.go2.go2_config import config_go2
+from go2_gym.envs.go2.velocity_tracking import VelocityTrackingEasyEnv
 
 from tqdm import tqdm
 
@@ -60,7 +60,7 @@ def load_env(label, headless=False):
     Cfg.domain_rand.randomize_com_displacement = False
 
     Cfg.env.num_recording_envs = 1
-    Cfg.env.num_envs = 1
+    Cfg.env.num_envs = 5
     Cfg.terrain.num_rows = 5
     Cfg.terrain.num_cols = 5
     Cfg.terrain.border_size = 0
@@ -70,29 +70,30 @@ def load_env(label, headless=False):
 
     Cfg.domain_rand.lag_timesteps = 6
     Cfg.domain_rand.randomize_lag_timesteps = True
-    Cfg.control.control_type = "actuator_net" #"actuator_net"
+    # default control_typw is "actuator_net", you can also switch it to "P" to enable joint PD control
+    Cfg.control.control_type = "actuator_net" 
     Cfg.asset.flip_visual_attachments = True
 
 
-    from go1_gym.envs.wrappers.history_wrapper import HistoryWrapper
+    from go2_gym.envs.wrappers.history_wrapper import HistoryWrapper
 
     env = VelocityTrackingEasyEnv(sim_device='cuda:0', headless=False, cfg=Cfg)
     env = HistoryWrapper(env)
 
     # load policy
     from ml_logger import logger
-    from go1_gym_learn.ppo_cse.actor_critic import ActorCritic
+    from go2_gym_learn.ppo_cse.actor_critic import ActorCritic
 
     policy = load_policy(logdir)
 
     return env, policy
 
 
-def play_go1(headless=True):
+def play_go2(headless=True):
     from ml_logger import logger
 
     from pathlib import Path
-    from go1_gym import MINI_GYM_ROOT_DIR
+    from go2_gym import MINI_GYM_ROOT_DIR
     import glob
     import os
 
@@ -102,7 +103,7 @@ def play_go1(headless=True):
 
     env, policy = load_env(label, headless=headless)
 
-    num_eval_steps = 250 #250
+    num_eval_steps = 2500 #250
     gaits = {"pronking": [0, 0, 0],
              "trotting": [0.5, 0, 0],
              "bounding": [0, 0.5, 0],
@@ -146,7 +147,7 @@ def play_go1(headless=True):
         measured_x_vels[i] = env.base_lin_vel[0, 0]
         joint_positions[i] = env.dof_pos[0, :].cpu()
         ###### -----------ldt---------------
-        joint_torques[i] = env.torques.detach().cpu().numpy()
+        # joint_torques[i] = env.torques.detach().cpu().numpy()
 
     # plot target and measured forward velocity
     from matplotlib import pyplot as plt
@@ -174,4 +175,4 @@ def play_go1(headless=True):
 
 if __name__ == '__main__':
     # to see the environment rendering, set headless=False
-    play_go1(headless=False)
+    play_go2(headless=False)
