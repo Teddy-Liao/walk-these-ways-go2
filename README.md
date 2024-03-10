@@ -64,7 +64,7 @@ sudo make install
 unitree_sdk2 has been inclued in `go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2`,  you can also clone from [Unitree Robotics](https://github.com/unitreerobotics/unitree_sdk2) to make sure the sdk is updated version.
 
 ```bash
-cd go2_gym_deploy
+cd go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2
 ```
 Delete build file
 ```bash
