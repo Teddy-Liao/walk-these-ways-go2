@@ -363,21 +363,25 @@ void Custom::LowCmdWrite(){
         sleep(0.5);
 
         while (true)
-        {
-            sleep(0.5);
+        {   // 初始化button值，防止damping被误触发
+            key.components.A = 0;
+            key.components.B = 0;
+            key.components.L2 = 0;
+            sleep(0.2);
+
             if ((int)key.components.B==1 && (int)key.components.L2==1) // [L2+B] is pressed again
             {
                 exit(0);
             }else if ((int)key.components.A==1 && (int)key.components.L2==1)
             {
-                std::cout << "======= activate sport_mode service ========"<<std::endl;
                 rsc.ServiceSwitch("sport_mode", 1);
-                sleep(1);
+                std::cout << "======= activate sport_mode service ========"<<std::endl;
+                sleep(0.5);
                 exit(0);
             }else
             {   std::cout << "======= Press [L2+B] again to exit ========"<<std::endl;
                 std::cout << "======= If the robot is set to nominal pose manually, Press [L2+A] to activate sport_mode service ========"<<std::endl;
-                continue;
+                sleep(0.5);
             }
         }
         
