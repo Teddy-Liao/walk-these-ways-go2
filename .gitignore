@@ -17,3 +17,5 @@ __pycache__/
 /runs/gait-conditioned-agility/2024*/
 /runs/gait-conditioned-agility/pretrain-go2/
 
+go2_gym_deploy/build/
+go2_gym_deploy/unitree_sdk2_bin/library/unitree_sdk2/build/
