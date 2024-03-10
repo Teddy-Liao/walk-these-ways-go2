@@ -38,12 +38,12 @@ python play.py
 Go2 pretrained model is provided in [./runs](runs/gait-conditioned-agility/pretrain-go2), you can choose whether to use provide pretrained model by modifying the label line `label = "gait-conditioned-agility/pretrain-go2/train"` to your own trained model.
 
 ### Known Issues
-* `flip_visual_attachments` in [go1_config](go1_gym/envs/go1/go1_config.py) should be set to `True`, otherwise errors would occur when visualizing.
-* To change configuration parameters of env or the robot, you should modify parameters in [go1_config](go1_gym/envs/go1/go1_config.py), not in [legged_robot_config](go1_gym/envs/base/legged_robot_config.py)
+* `flip_visual_attachments` in [go2_config](go2_gym/envs/go2/go2_config.py) should be set to `True`, otherwise errors would occur when visualizing.
+* To change configuration parameters of env or the robot, you should modify parameters in [go2_config](go2_gym/envs/go2/go2_config.py), not in [legged_robot_config](go2_gym/envs/base/legged_robot_config.py)
 
 
 ---
-## Deploy
+## Deploy on PC
 Trained policy is only supported to be deployed through your PC or laptop now, because I am not familiar with Jetson Orin, and hope I can fix it and deploy on Jetson Orin.
 
 ### Requirements
@@ -132,11 +132,19 @@ Open a new terminate and run:
 cd go2_gym_deploy/scripts
 python deploy_policy.py
 ```
+According to the hints shown in terminal, Press button [R2] to start the controller. You can check RC mapping in the following subsection.
 
-According to the hints shown in terminal, Press [R2] to start the controller. You can check RC mapping from [walk-these-ways](https://github.com/Improbable-AI/walk-these-ways) page.
+
+### Joystick Mapping
+
+![Joystick Mapping](media/rc_map.png)
+
+
+To view the details of joystick mapping or even modify default mapping logic, please refer to the `get_command` function within the [cheetah_state_estimator.py](go2_gym_deploy/utils/cheetah_state_estimator.py) file. In this project, the default gait is set to trot.
+
 
 **Caution**:
-* Press [L2+B] if any unexpected situation occurs!!!
+* Press [L2+B] to switch to damping mode if any unexpected situation occurs!!!
 * This is research code; use at your own risk; we do not take responsibility for any damage.
 
 Test Video on Unitree Go2: 
@@ -144,7 +152,15 @@ Test Video on Unitree Go2:
 - Test by other contributors: https://www.bilibili.com/video/BV1Ut421H7Fr/?spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=07873ebe2a113dac57775e264a210929
 
 
-**Please star this repository if it does help you! Many Thanks!**
+---
+## Deploy on Nvidia Jetson Orin
+
+To be continue:
+
+
+---
+
+🌟🌟🌟  **Please star this repository if it does help you! Many Thanks!**
 
 ## Acknowledgements
 * Many thanks to [Leolar](https://github.com/NihaoyaLeolar), who provide Nvidia 3060ti and supporting.
