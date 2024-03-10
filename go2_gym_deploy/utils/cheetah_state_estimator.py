@@ -192,28 +192,28 @@ class StateEstimator:
             cmd_ori_pitch = -0.4 * self.right_stick[1]
 
         # gait buttons
-        if self.mode == 0:
+        if self.mode == 0: # Press Button 'A' -> 'Bound'
             self.cmd_phase = 0.5
             self.cmd_offset = 0.0
             self.cmd_bound = 0.0
             self.cmd_duration = 0.5
-        elif self.mode == 1:
+        elif self.mode == 1: # Press Button 'B' -> 'Trot'
             self.cmd_phase = 0.0
             self.cmd_offset = 0.0
             self.cmd_bound = 0.0
             self.cmd_duration = 0.5
-        elif self.mode == 2:
+        elif self.mode == 2: # Press Button 'X' -> 'Pace'
             self.cmd_phase = 0.0
             self.cmd_offset = 0.5
             self.cmd_bound = 0.0
             self.cmd_duration = 0.5
-        elif self.mode == 3:
+        elif self.mode == 3: # Press Button 'Y' -> 'Pronk'
             self.cmd_phase = 0.0
             self.cmd_offset = 0.0
             self.cmd_bound = 0.5
             self.cmd_duration = 0.5
-        else:
-            self.cmd_phase = 0.5
+        else: # Default Gait -> 'Trot'
+            self.cmd_phase = 0.0
             self.cmd_offset = 0.0
             self.cmd_bound = 0.0
             self.cmd_duration = 0.5

@@ -359,12 +359,28 @@ void Custom::LowCmdWrite(){
             low_cmd.motor_cmd()[i].kd() = 5;
             low_cmd.motor_cmd()[i].tau() = 0;
         }  
-        std::cout << "======= Switch to Damping Mode, and the thread is sleeping ========"<<std::endl;
-        sleep(10);
-        std::cout << "======= Damping is about to exit ========"<<std::endl;
-        sleep(10);
-        std::cout << "======= Damping exit ========"<<std::endl;
-        exit(0);
+        std::cout << "======= Switched to Damping Mode, and the thread is sleeping ========"<<std::endl;
+        sleep(0.5);
+
+        while (true)
+        {
+            sleep(0.5);
+            if ((int)key.components.B==1 && (int)key.components.L2==1) // [L2+B] is pressed again
+            {
+                exit(0);
+            }else if ((int)key.components.A==1 && (int)key.components.L2==1)
+            {
+                std::cout << "======= activate sport_mode service ========"<<std::endl;
+                rsc.ServiceSwitch("sport_mode", 1);
+                sleep(1);
+                exit(0);
+            }else
+            {   std::cout << "======= Press [L2+B] again to exit ========"<<std::endl;
+                std::cout << "======= If the robot is set to nominal pose manually, Press [L2+A] to activate sport_mode service ========"<<std::endl;
+                continue;
+            }
+        }
+        
     } 
     else{
         for (int i = 0; i < 12; i++)
@@ -431,35 +447,41 @@ int main(int argc, char **argv)
         exit(-1);
     }
 
-    std::cout << "Caution: Remember to shut down Unitree sport_mode Service." << std::endl
-              << "Communication level is set to LOW-level." << std::endl
+    std::cout << "Communication level is set to LOW-level." << std::endl
               << "WARNING: Make sure the robot is hung up." << std::endl
+              << "Caution: The scripts is about to shutdown Unitree sport_mode Service." << std::endl
               << "Press Enter to continue..." << std::endl;
     std::cin.ignore();
 
-    unitree::robot::ChannelFactory::Instance()->Init(0, argv[1]); // 传入benji的网卡地址
+    unitree::robot::ChannelFactory::Instance()->Init(0, argv[1]); // 传入本机的网卡地址（PC or Jetson Orin）
 
     Custom custom;
 
     custom.InitRobotStateClient();
-    while(custom.queryServiceStatus("sport_mode"))
+    if(custom.queryServiceStatus("sport_mode"))
     {
         std::cout<<"Trying to deactivate the service: " << "sport_mode" << std::endl;
         custom.activateService("sport_mode",0);
         sleep(1);
+    } else{
+        std::cout <<"sportd_mode is already deactivated now" << std::endl
+                  <<"next step is setting up communication" << std::endl
+                  << "Press Enter to continue..." << std::endl;
+        std::cin.ignore();
     }
-    std::cout<<"sportd_mode is deactivated now" << std::endl
-             << "Press Enter to continue..." << std::endl;
-    std::cin.ignore();
+
 
     custom.Init();
 
     std::cout<<"Communicatino is set up successfully" << std::endl;
     std::cout<<"LCM <<<------------>>> Unitree SDK2" << std::endl;
+    std::cout<<"------------------------------------" << std::endl;
+    std::cout<<"------------------------------------" << std::endl;
+    std::cout<<"Press L2+B if any unexpected error occurs" << std::endl;
 
     custom.Loop();
 
-    while (1)
+    while (true)
     {
         sleep(10);
     }
