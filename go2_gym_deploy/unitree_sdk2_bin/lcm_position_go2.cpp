@@ -25,11 +25,15 @@
 #define TOPIC_LOWSTATE "rt/lowstate"
 #define TOPIC_JOYSTICK "rt/wirelesscontroller"
 
+// 为保证项目代码的稳定性和易理解，没有采用unitree_sdk2中采用的using namespace语句
+
 constexpr double PosStopF = (2.146E+9f);
 constexpr double VelStopF = (16000.0f);
 
+
+// 无需更改：Unitree 提供的电机校验函数
 uint32_t crc32_core(uint32_t* ptr, uint32_t len)
-{   // 无需更改：Unitree 提供的电机校验函数
+{   
     unsigned int xbit = 0;
     unsigned int data = 0;
     unsigned int CRC32 = 0xFFFFFFFF;
@@ -61,7 +65,7 @@ uint32_t crc32_core(uint32_t* ptr, uint32_t len)
 }
 
 
-// 遥控器键值联合体
+// 遥控器键值联合体，摘自unitree_sdk2，无需更改
 typedef union
 {
   struct
@@ -189,6 +193,7 @@ void Custom::JoystickHandler(const void *message)
 
 // -------------------------------------------------------------------------------
 // 线程 1 ： lcm send 线程
+// 此线程作用：实时通过unitree_sdk2读取low_state信号和joystick信号，并发送给lcm中间件
 void Custom::lcm_send(){
     // leg_control_lcm_data
     for (int i = 0; i < 12; i++)
@@ -253,22 +258,29 @@ void Custom::lcm_send(){
     // std::cout << "loop: messsages are sending ......" << std::endl;
 }
 
+
+// -------------------------------------------------------------------------------
+// 线程 2 ： lcm receive 线程
+// 此线程作用：实时通过lcm中间件读取pytorch神经网络输出的期望关节控制信号（q, qd, kp, kd, tau_ff）
+// 查看 go2_gym_deploy/envs/lcm_agent.py 文件，可以知道：
+// 神经网络只输出期望的q，而kp，kd是可以自定义设置的, qd 和 tau_ff 被设置为0
 void Custom::lcm_receive_Handler(const lcm::ReceiveBuffer *rbuf, const std::string & chan, const pd_tau_targets_lcmt* msg){
     (void) rbuf;
     (void) chan;
     joint_command_simple = *msg; //接收神经网络输出的关节信号
 }
 
-// -------------------------------------------------------------------------------
-// 线程 2 ： lcm receive 线程
+// 此处参考lcm推荐的标准格式，循环处理，接受lcm消息
 void Custom::lcm_receive(){
-    // 循环处理，接受lcm消息
     while(true){
         lc.handle();
     }
 }
 
 
+// -------------------------------------------------------------------------------
+// 线程 3 ： unitree_sdk2 command write 线程
+// 此线程作用：初始化low_cmd，经过合理的状态机后，电机将执行神经网络的输出
 void Custom::InitLowCmd()
 {
     //LowCmd 类型中的 head 成员 表示帧头，
@@ -289,7 +301,6 @@ void Custom::InitLowCmd()
         如果用户在调试过程中发现无法控制 Go2 机器人的关节电机，
         请检查变量的值是否为0x01。*/
         low_cmd.motor_cmd()[i].mode() = (0x01);   // motor switch to servo (PMSM) mode
-
         low_cmd.motor_cmd()[i].q() = (PosStopF);
         low_cmd.motor_cmd()[i].dq() = (VelStopF);
         low_cmd.motor_cmd()[i].kp() = (0);
@@ -298,16 +309,15 @@ void Custom::InitLowCmd()
     }
 }
 
-
 void Custom::SetNominalPose(){
     // 运行此cpp文件后，不仅是初始化通信
-    // 同样会趴下时的初始化关节角度
+    // 同样会在趴下时的初始化关节角度
     // 将各个电机都设置为位置模式
     for(int i = 0; i < 12; i++){
         joint_command_simple.qd_des[i] = 0;
         joint_command_simple.tau_ff[i] = 0;
-        joint_command_simple.kp[i] = 60; // 关节PD参数有待调整 60
-        joint_command_simple.kd[i] = 5; // 关节PD参数有待调整 5
+        joint_command_simple.kp[i] = 20; 
+        joint_command_simple.kd[i] = 0.5; 
     }
 
     // 趴下时的关节角度
@@ -325,11 +335,8 @@ void Custom::SetNominalPose(){
     joint_command_simple.q_des[11] = -2.721;
 
     std::cout<<"SET NOMINAL POSE"<<std::endl;
-
 }
 
-// -------------------------------------------------------------------------------
-// 线程 3 ： unitree_sdk2 send 线程
 void Custom::LowCmdWrite(){
     motiontime++;
     
@@ -339,6 +346,8 @@ void Custom::LowCmdWrite(){
             // 将当前各关节角度设置为目标角度
             joint_command_simple.q_des[i] = leg_control_lcm_data.q[i];
             // 初始化L2+B，防止damping被误触发
+            key.components.Y = 0;
+            key.components.A = 0;
             key.components.B = 0;
             key.components.L2 = 0;
         }
@@ -350,8 +359,7 @@ void Custom::LowCmdWrite(){
     // if (  low_state.imu_state().rpy()[0] > 0.5 || low_state.imu_state().rpy()[1] > 0.5 || ((int)key.components.B==1 && (int)key.components.L2==1))
     if ( std::abs(low_state.imu_state().rpy()[0]) > 0.5 || std::abs(low_state.imu_state().rpy()[1]) > 0.5 || ((int)key.components.B==1 && (int)key.components.L2==1))
     {       
-        for (int i = 0; i < 12; i++)
-        {
+        for (int i = 0; i < 12; i++){
             // 进入damping模式
             low_cmd.motor_cmd()[i].q() = 0;
             low_cmd.motor_cmd()[i].dq() = 0;
@@ -362,33 +370,47 @@ void Custom::LowCmdWrite(){
         std::cout << "======= Switched to Damping Mode, and the thread is sleeping ========"<<std::endl;
         sleep(0.5);
 
-        while (true)
-        {   // 初始化button值，防止damping被误触发
-            key.components.A = 0;
-            key.components.B = 0;
-            key.components.L2 = 0;
-            sleep(0.2);
 
-            if ((int)key.components.B==1 && (int)key.components.L2==1) // [L2+B] is pressed again
-            {
+        bool last_A_pressed = 0;
+        bool last_B_pressed = 0;
+        bool last_Y_pressed = 0;
+        bool last_L2_pressed = 0;
+        while (true)
+        {   
+            
+            sleep(0.1);
+
+            if (((int)key.components.B==1 && (int)key.components.L2==1) && (!(last_B_pressed || last_L2_pressed))) {
+                // [L2+B] is pressed again
                 exit(0);
-            }else if ((int)key.components.A==1 && (int)key.components.L2==1)
-            {
+            } else if (((int)key.components.A==1 && (int)key.components.L2==1) && (!(last_A_pressed || last_L2_pressed))){
                 rsc.ServiceSwitch("sport_mode", 1);
                 std::cout << "======= activate sport_mode service ========"<<std::endl;
                 sleep(0.5);
                 exit(0);
-            }else
-            {   std::cout << "======= Press [L2+B] again to exit ========"<<std::endl;
+            } else{   
+                std::cout << "======= Press [L2+B] again to exit ========"<<std::endl;
                 std::cout << "======= If the robot is set to nominal pose manually, Press [L2+A] to activate sport_mode service ========"<<std::endl;
-                sleep(0.5);
+                if (((int)key.components.Y==1 && (int)key.components.L2==1) && (!(last_Y_pressed || last_L2_pressed))){
+                    sleep(1);
+                    std::cout << "=======  Switch to Walk These Ways ========"<<std::endl;
+                    break;
+                }else{
+                    sleep(0.1);
+                }
+                
             }
+
+            last_A_pressed = (bool)key.components.A;
+            last_B_pressed = (bool)key.components.B;
+            last_Y_pressed = (bool)key.components.Y;
+            last_L2_pressed = (bool)key.components.L2;
+
         }
         
     } 
     else{
-        for (int i = 0; i < 12; i++)
-        {
+        for (int i = 0; i < 12; i++){
             // 在确保安全的前提下，才执行神经网络模型的输出
             low_cmd.motor_cmd()[i].q() = joint_command_simple.q_des[i];
             low_cmd.motor_cmd()[i].dq() = joint_command_simple.qd_des[i];
@@ -405,8 +427,13 @@ void Custom::LowCmdWrite(){
 }
 
 
-void Custom::Init(){
+//
+// 与循环工作的线程相关的函数定义已完结
+//----------------------------------------------------------------------
 
+
+
+void Custom::Init(){
     _firstRun = true;
     InitLowCmd();
     SetNominalPose();
@@ -425,7 +452,6 @@ void Custom::Init(){
     /*create joystick dds subscriber*/
     joystick_suber.reset(new unitree::robot::ChannelSubscriber<unitree_go::msg::dds_::WirelessController_>(TOPIC_JOYSTICK));
     joystick_suber->InitChannel(std::bind(&Custom::JoystickHandler, this, std::placeholders::_1), 1);
-
 }
 
 
