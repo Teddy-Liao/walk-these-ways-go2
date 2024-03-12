@@ -7,6 +7,7 @@ This repository is forked from [walk-these-ways](https://github.com/Improbable-A
 However, the brand-new architecture [unitree-sdk2 ](https://github.com/unitreerobotics/unitree_sdk2)is not based on UDP anymore, so this project aims to train and deploy walk-these-ways on Unitree Go2 by modifying SDK interfaces.
 
 ## Requirements 
+* miniconda
 * pytorch 1.10 with cuda-11.3
 * Isaac Gym
 * Nvidia GPU with at least 8GB of VRAM
