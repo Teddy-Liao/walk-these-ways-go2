@@ -115,9 +115,9 @@ If error occurs, please check [Unitree Support](https://support.unitree.com/home
 ### Test communication between LCM and unitree_sdk2
 ```bash
 cd go2_gym_deploy/build
-sudo ./lcm_position_go2 enx10086
+sudo ./lcm_position_go2 eth0
 ```
-Aeplace `enx10086` with your own network interface address. According to the messages shown in terminal, press `Enter` for several times and the communication between LCM and unitree_sdk2 will set up.
+Aeplace `eth0` with your own network interface address. According to the messages shown in terminal, press `Enter` for several times and the communication between LCM and unitree_sdk2 will set up.
 
 This command will automatically shut down Unitree sport_mode Service and set the robot to LOW-LEVEL. Please make sure This will Go2 is hung up or lie on the ground.
 
@@ -126,6 +126,11 @@ You can verify LCM send by opening a new terminal:
 cd go2_gym_deploy/build
 sudo ./lcm_receive
 ```
+
+If LCM and unitree_sdk2 are correctly connected with each other, messages will be shown in the terminal:
+
+![Alt text](media/lcm_receive.png)
+
 
 ### Load and run policy
 Open a new terminate and run:
