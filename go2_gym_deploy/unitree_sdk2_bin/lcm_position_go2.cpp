@@ -142,7 +142,7 @@ public:
 
 void Custom::InitRobotStateClient()
 {
-    rsc.SetTimeout(10.0f); 
+    rsc.SetTimeout(5.0f); 
     rsc.Init();
 }
 
@@ -229,7 +229,6 @@ void Custom::lcm_send(){
     rc_command.left_lower_left_switch = key.components.L2;
     rc_command.left_upper_switch = key.components.L1;
 
-    // 这里的mode是用来控制啥的？
     if(key.components.A > 0){
         mode = 0;
     } else if(key.components.B > 0){
@@ -357,7 +356,7 @@ void Custom::LowCmdWrite(){
     // 写了一段安全冗余代码
     // 当roll角超过限制，或pitch角超过限制，或遥控器按下L2+B键
     // if (  low_state.imu_state().rpy()[0] > 0.5 || low_state.imu_state().rpy()[1] > 0.5 || ((int)key.components.B==1 && (int)key.components.L2==1))
-    if ( std::abs(low_state.imu_state().rpy()[0]) > 0.5 || std::abs(low_state.imu_state().rpy()[1]) > 0.5 || ((int)key.components.B==1 && (int)key.components.L2==1))
+    if ( std::abs(low_state.imu_state().rpy()[0]) > 0.8 || std::abs(low_state.imu_state().rpy()[1]) > 0.8 || ((int)key.components.B==1 && (int)key.components.L2==1))
     {       
         for (int i = 0; i < 12; i++){
             // 进入damping模式
@@ -368,43 +367,40 @@ void Custom::LowCmdWrite(){
             low_cmd.motor_cmd()[i].tau() = 0;
         }  
         std::cout << "======= Switched to Damping Mode, and the thread is sleeping ========"<<std::endl;
-        sleep(0.5);
+        sleep(1.5);
 
-
-        bool last_A_pressed = 0;
-        bool last_B_pressed = 0;
-        bool last_Y_pressed = 0;
-        bool last_L2_pressed = 0;
         while (true)
         {   
             
-            sleep(0.1);
+            // sleep(0.1);
 
-            if (((int)key.components.B==1 && (int)key.components.L2==1) && (!(last_B_pressed || last_L2_pressed))) {
+            if (((int)key.components.B==1 && (int)key.components.L2==1) ) {
                 // [L2+B] is pressed again
+                std::cout << "======= [L2+B] is pressed again, the script is about to exit========" <<std::endl;
                 exit(0);
-            } else if (((int)key.components.A==1 && (int)key.components.L2==1) && (!(last_A_pressed || last_L2_pressed))){
+            } else if (((int)key.components.A==1 && (int)key.components.L2==1) ){
                 rsc.ServiceSwitch("sport_mode", 1);
-                std::cout << "======= activate sport_mode service ========"<<std::endl;
+                std::cout << "======= activate sport_mode service and exit========" <<std::endl;
                 sleep(0.5);
                 exit(0);
             } else{   
-                std::cout << "======= Press [L2+B] again to exit ========"<<std::endl;
-                std::cout << "======= If the robot is set to nominal pose manually, Press [L2+A] to activate sport_mode service ========"<<std::endl;
-                if (((int)key.components.Y==1 && (int)key.components.L2==1) && (!(last_Y_pressed || last_L2_pressed))){
-                    sleep(1);
+                if (((int)key.components.Y==1 && (int)key.components.L2==1) ){
                     std::cout << "=======  Switch to Walk These Ways ========"<<std::endl;
+                    std::cout<<"Communicatino is set up successfully" << std::endl;
+                    std::cout<<"LCM <<<------------>>> Unitree SDK2" << std::endl;
+                    std::cout<<"------------------------------------" << std::endl;
+                    std::cout<<"------------------------------------" << std::endl;
+                    std::cout<<"Press L2+B if any unexpected error occurs" << std::endl;
                     break;
+                    
                 }else{
-                    sleep(0.1);
+                    std::cout << "======= Press [L2+B] again to exit ========"<<std::endl;
+                    std::cout << "======= Press [L2+Y] again to switch to WTW ========"<<std::endl;
+                    std::cout << "======= Press [L2+A] again to activate sport_mode service========"<<std::endl;
+                    sleep(0.01);
                 }
                 
             }
-
-            last_A_pressed = (bool)key.components.A;
-            last_B_pressed = (bool)key.components.B;
-            last_Y_pressed = (bool)key.components.Y;
-            last_L2_pressed = (bool)key.components.L2;
 
         }
         
@@ -492,7 +488,10 @@ int main(int argc, char **argv)
     {
         std::cout<<"Trying to deactivate the service: " << "sport_mode" << std::endl;
         custom.activateService("sport_mode",0);
-        sleep(1);
+        sleep(0.5);
+        if(!custom.queryServiceStatus("sport_mode")){
+            std::cout<<"Trying to deactivate the service: " << "sport_mode" << std::endl;
+        }
     } else{
         std::cout <<"sportd_mode is already deactivated now" << std::endl
                   <<"next step is setting up communication" << std::endl
