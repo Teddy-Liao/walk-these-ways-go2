@@ -10,6 +10,7 @@ from go2_gym_deploy.utils.command_profile import *
 
 import pathlib
 
+# lcm多播通信的标准格式
 lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=255")
 
 def load_and_run_policy(label, experiment_name, max_vel=1.0, max_yaw_vel=1.0):

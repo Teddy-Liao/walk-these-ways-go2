@@ -231,7 +231,7 @@ class LCMAgent():
         self.actions = torch.clip(actions[0:1, :], -clip_actions, clip_actions)
         self.publish_action(self.actions, hard_reset=hard_reset)
         time.sleep(max(self.dt - (time.time() - self.time), 0))
-        if self.timestep % 100 == 0: print(f'frq: {1 / (time.time() - self.time)} Hz');
+        if self.timestep % 100 == 0: print(f'frq: {1 / (time.time() - self.time)} Hz')
         self.time = time.time()
         obs = self.get_obs()
 

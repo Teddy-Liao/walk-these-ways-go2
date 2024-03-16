@@ -28,8 +28,8 @@ def config_go2(Cnfg: Union[Cfg, Meta]):
 
     _ = Cnfg.control
     _.control_type = 'P' # P
-    _.stiffness = {'joint': 20.}  # [N*m/rad]
-    _.damping = {'joint': 0.5}  # [N*m*s/rad]
+    _.stiffness = {'joint': 25.}  # [N*m/rad] 关节PD参数有待调整 
+    _.damping = {'joint': 0.6}  # [N*m*s/rad] 关节PD参数有待调整 
     # action scale: target angle = actionScale * action + defaultAngle
     _.action_scale = 0.25
     _.hip_scale_reduction = 0.5
@@ -37,7 +37,6 @@ def config_go2(Cnfg: Union[Cfg, Meta]):
     _.decimation = 4
 
     _ = Cnfg.asset
-    # _.file = '{MINI_GYM_ROOT_DIR}/resources/robots/go1/urdf/go1.urdf'
     _.file = '{MINI_GYM_ROOT_DIR}/resources/robots/go2/urdf/go2.urdf'
     _.foot_name = "foot"
     _.penalize_contacts_on = ["thigh", "calf"]

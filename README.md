@@ -4,15 +4,16 @@
 
 This repository is forked from [walk-these-ways](https://github.com/Improbable-AI/walk-these-ways), which is a Go1 Sim-to-Real Locomotion Starter Kit. It seems that [walk-these-ways](https://github.com/Improbable-AI/walk-these-ways) can be untilized on Unitree [A1](https://github.com/fan-ziqi/dog_rl_deploy) with simple modifications, since those robots are base on [unitree-legged-sdk](https://github.com/unitreerobotics/unitree_legged_sdk). 
 
-However, the brand-new architecture [unitree-sdk2 ](https://github.com/unitreerobotics/unitree_sdk2)is not base on UDP anymore, so this project aims to train and deploy walk-these-ways on Unitree Go2 by modifying SDK interfaces.
+However, the brand-new architecture [unitree-sdk2 ](https://github.com/unitreerobotics/unitree_sdk2)is not based on UDP anymore, so this project aims to train and deploy walk-these-ways on Unitree Go2 by modifying SDK interfaces.
 
 ## Requirements 
+* miniconda
 * pytorch 1.10 with cuda-11.3
 * Isaac Gym
 * Nvidia GPU with at least 8GB of VRAM
 
 ---
-## Train
+## Train and Play
 Clone this repository and install:
 
 ``` bash
@@ -114,9 +115,9 @@ If error occurs, please check [Unitree Support](https://support.unitree.com/home
 ### Test communication between LCM and unitree_sdk2
 ```bash
 cd go2_gym_deploy/build
-sudo ./lcm_position_go2 enx10086
+sudo ./lcm_position_go2 eth0
 ```
-Aeplace `enx10086` with your own network interface address. According to the messages shown in terminal, press `Enter` for several times and the communication between LCM and unitree_sdk2 will set up.
+Aeplace `eth0` with your own network interface address. According to the messages shown in terminal, press `Enter` for several times and the communication between LCM and unitree_sdk2 will set up.
 
 This command will automatically shut down Unitree sport_mode Service and set the robot to LOW-LEVEL. Please make sure This will Go2 is hung up or lie on the ground.
 
@@ -125,6 +126,11 @@ You can verify LCM send by opening a new terminal:
 cd go2_gym_deploy/build
 sudo ./lcm_receive
 ```
+
+If LCM and unitree_sdk2 are correctly connected with each other, messages will be shown in the terminal:
+
+![Alt text](media/lcm_receive.png)
+
 
 ### Load and run policy
 Open a new terminate and run:
@@ -155,18 +161,88 @@ Test Video on Unitree Go2:
 ---
 ## Deploy on Nvidia Jetson Orin
 
-To be continue:
+The Unitree Go2 robot is equipped with an onboard Nvidia Jetson Orin Nano/NX, which operates on an ARM-based architecture. Default information of this onboard computer is shown below, and you can connnect to Jetson by SSH, VScode(remote development) or plugging a HDMI cable.
+
+```
+IP:192.168.123.18
+user name：unitree
+password：123
+```
+
+### Requirements for Jetson
+- cuda
+- pytorch
+- miniconda (Omitted here; please install it by yourself)
+- cudnn (Omitted here; please install it by yourself)
+
+
+Two different ways are provided to set up correct environments in Jetson: through Internet or through Docker.
+
+### Through Internet
+Connecting a Nvidia Jetson device to the internet can be done in two primary ways:
+
+1. **Wired Connection**: Directly plug an Ethernet cable with internet access into the Jetson's Ethernet port. This method provides a stable and fast internet connection, suitable for tasks that require high bandwidth or low latency.
+
+2. **Wireless Connection via USB Wi-Fi Adapter**: Purchase a USB Wi-Fi adapter compatible with the Jetson device. This method adds wireless connectivity, offering the flexibility to connect to the internet without the need for physical cables. However, it's important to ensure the USB Wi-Fi adapter is supported by the Jetson's operating system and drivers.
+
+
+
+#### Check Jetpack Version
+Jetpack toolbox has been preinstalled on Jetson, you should check the jetpack vertsion firstly.
+```bash
+sudo -H pip install jetson-stats  #Install jetson-stats toolkit
+sudo jtop
+```
+According to the detail information printed in the terminal window, the Jetpack version of my Unitree Go2 is `Jetpack 5.1.1 [L4T 35.3.1]`
+
+![](media/sudo_jtop.png)
+
+You can also check libraries that have been preinstalled: 
+```bash
+sudo jetson_release
+```
+#### Install cuda for jetson
+Check if there is a preinstalled version of cuda. 
+```bash
+nvcc -V # check preinstalled cuda version
+```
+
+If the preinstalled version if too high, you should uninstall it because, for instance, there is no Pytorch version that is compatible with cuda-12.2.
+
+```bash
+sudo apt-get remove cuda
+sudo apt autoremove 
+sudo apt-get remove cuda*
+sudo dpkg -l |grep cuda # check if any residual cuda file exists
+sudo dpkg -P Residual filename
+```
+
+Personally, I recommend to install cuda-11.8. Click the link, [CUDA Toolkit 11.8 Downloads](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux&target_arch=aarch64-jetson&Compilation=Native&Distribution=Ubuntu&target_version=20.04&target_type=deb_local) , to check installation commands.
+
+#### Install Pytorch for Jetson
+
+Please [download](https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048) pre-built PyTorch pip wheel installers for Jetson Nano, which is different from the way we install Pytorch on PC. Note that correct pytorch version should be chosen to make it compatible with specific version of cuda and Jetpack. 
+
+#### Run codes without cable
+As long as the environment and requirements on the Jetson are properly configured, you can follow the same deployment guidelines as you would on a PC. This liberates the robot! Now, you can test the code cable-free, offering more freedom to the robot's movements and applications.
+
+### Through Docker
+
+To be continue ...
+
+--- 
+
+🌟🌟🌟  **Please star this repository if it does help you! Many Thanks!** 🌟🌟🌟 
 
 
 ---
-
-🌟🌟🌟  **Please star this repository if it does help you! Many Thanks!**
-
 ## Acknowledgements
 * Many thanks to [Leolar](https://github.com/NihaoyaLeolar), who provide Nvidia 3060ti and supporting.
 * Many thanks to [Jony](https://github.com/jonyzhang2023) and Peter for their support and encourage me to learn basic kownledge about RL.
 * Many thanks to [Simonforyou](https://github.com/Simonforyou), who provide Go2 pretrained model.
 
+---
 ## TO DO
 - [x] Do not inherit config and env from go1_gym, build customized config and env files for Go2
-- [ ] Deploy on Jeston Orin Nano
+- [x] Deploy on Jeston Orin Nano
+- [ ] Deploy through Docker
