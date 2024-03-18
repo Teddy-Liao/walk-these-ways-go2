@@ -10,39 +10,36 @@ from go2_gym_deploy.utils.command_profile import *
 
 import pathlib
 
-# lcm多播通信的标准格式
-lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=255")
+lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=255") # lcm多播通信的标准格式
 
 def load_and_run_policy(label, experiment_name, max_vel=1.0, max_yaw_vel=1.0):
-    # load agent
+
     dirs = glob.glob(f"../../runs/{label}/*")
     logdir = sorted(dirs)[0]
 
-# with open(logdir+"/parameters.pkl", 'rb') as file:
+    # ====================== load Config =======================
     with open(logdir+"/parameters.pkl", 'rb') as file:
         pkl_cfg = pkl.load(file)
-        print(pkl_cfg.keys())
+        # print(pkl_cfg.keys())
         cfg = pkl_cfg["Cfg"]
-        print(cfg.keys())
-
+        # print(cfg.keys())
     print('Config successfully loaded!')
 
+    # ====================== Create Agent =======================
     se = StateEstimator(lc)
-
     control_dt = 0.02
     command_profile = RCControllerProfile(dt=control_dt, state_estimator=se, x_scale=max_vel, y_scale=0.6, yaw_scale=max_yaw_vel)
-
     hardware_agent = LCMAgent(cfg, se, command_profile)
     se.spin()
-
     from go2_gym_deploy.envs.history_wrapper import HistoryWrapper
     hardware_agent = HistoryWrapper(hardware_agent)
     print('Agent successfully created!')
 
+    # ====================== load Policy =======================
     policy = load_policy(logdir)
     print('Policy successfully loaded!')
 
-    # load runner
+    # ====================== load runner =======================
     root = f"{pathlib.Path(__file__).parent.resolve()}/../../logs/"
     pathlib.Path(root).mkdir(parents=True, exist_ok=True)
     deployment_runner = DeploymentRunner(experiment_name=experiment_name, se=None,
@@ -59,9 +56,8 @@ def load_and_run_policy(label, experiment_name, max_vel=1.0, max_yaw_vel=1.0):
 
     deployment_runner.run(max_steps=max_steps, logging=True)
 
+
 def load_policy(logdir):
-    # try ------------------
-    # body = torch.jit.load(logdir + '/checkpoints/body_latest.jit').to('cpu')
     body = torch.jit.load(logdir + '/checkpoints/body_latest.jit')
 
     import os
