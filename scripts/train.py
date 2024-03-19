@@ -6,17 +6,26 @@ def train_go2(headless=True):
 
     from go2_gym.envs.base.legged_robot_config import Cfg
     from go2_gym.envs.go2.go2_config import config_go2
+    # 这里MIT自己写的VelocityTrackingEasyEnv, 继承于legged_robot.py
     from go2_gym.envs.go2.velocity_tracking import VelocityTrackingEasyEnv
 
     from ml_logger import logger
 
+    # rsl_rl PPO参数
     from go2_gym_learn.ppo_cse import Runner
     from go2_gym.envs.wrappers.history_wrapper import HistoryWrapper
     from go2_gym_learn.ppo_cse.actor_critic import AC_Args
     from go2_gym_learn.ppo_cse.ppo import PPO_Args
     from go2_gym_learn.ppo_cse import RunnerArgs
 
+
     config_go2(Cfg)
+
+
+    RunnerArgs.max_iterations = 30000
+    RunnerArgs.save_interval = 100
+    RunnerArgs.save_video_interval = 100
+
 
     Cfg.commands.num_lin_vel_bins = 30
     Cfg.commands.num_ang_vel_bins = 30
@@ -222,9 +231,14 @@ if __name__ == '__main__':
     from ml_logger import logger
     from go2_gym import MINI_GYM_ROOT_DIR
 
+    # 获取正在执行的 Python 脚本文件的文件名（不包含路径和扩展名）
     stem = Path(__file__).stem
+    # 2024-03-18/train/142238.667503
+    # 年-月-日/本文件的文件名/14时22分38秒...微秒
     logger.configure(logger.utcnow(f'gait-conditioned-agility/%Y-%m-%d/{stem}/%H%M%S.%f'),
                      root=Path(f"{MINI_GYM_ROOT_DIR}/runs").resolve(), )
+    # 记录了一组配置，这些配置定义了在训练过程中需要追踪的各种指标，并将这些配置保存在名为 .charts.yml 的文件中
+    # 下面配置中的指标也会print在命令行中
     logger.log_text("""
                 charts: 
                 - yKey: train/episode/rew_total/mean

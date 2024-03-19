@@ -1,3 +1,10 @@
+'''
+通过使用 HistoryWrapper
+可以让 Agent 在做决策时不仅基于当前的观察状态，还能利用之前的历史信息。
+这种历史信息对于解决那些需要考虑时间序列数据的任务特别有用，
+比如在处理具有时间依赖性的动态环境时。
+'''
+
 import isaacgym
 assert isaacgym
 import torch
